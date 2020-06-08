@@ -1,2 +1,2 @@
-# todolist_kata_djabgo
+# todolist_kata_django
 ToDo List Kata - Python Django Application
