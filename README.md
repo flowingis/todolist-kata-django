@@ -17,6 +17,6 @@ Amministrazione
 - Aggiungere la gestione del model da area amministrazione: regustrare il model in `admin.py`
 
 Riferimenti
-- https://docs.djangoproject.com/en/1.8/intro/tutorial01/
-- https://docs.djangoproject.com/en/1.8/intro/tutorial02/
-- https://docs.djangoproject.com/en/1.8/intro/tutorial03/
+- https://docs.djangoproject.com/en/3.0/intro/tutorial01/
+- https://docs.djangoproject.com/en/3.0/intro/tutorial02/
+- https://docs.djangoproject.com/en/3.0/intro/tutorial03/
