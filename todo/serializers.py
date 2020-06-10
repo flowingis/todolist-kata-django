@@ -12,6 +12,7 @@ class TaskSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def __init__(self, *args, **kwargs):
-        if kwargs['context']['request'].method == 'POST':
-            kwargs['data']['uuid'] = str(uuid.uuid4())
+        if 'context' in kwargs:
+            if kwargs['context']['request'].method == 'POST':
+                kwargs['data']['uuid'] = str(uuid.uuid4())
         super(TaskSerializer, self).__init__(*args, **kwargs)
