@@ -45,7 +45,7 @@ export default {
                             {{task.description}}
                         </div>
                         <div class="float-right">
-                            <button class="bg-red-500 hover:bg-red-700 text-white py-1 px-1" @click="deleteTask(task.uuid)">Delete</button>
+                            <button class="bg-red-500 hover:bg-red-700 text-white py-1 px-1" @click="deleteTask(task.id)">Delete</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>

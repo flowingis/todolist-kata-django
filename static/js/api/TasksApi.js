@@ -5,7 +5,7 @@ class TasksApi {
             method: 'GET'
         };
         try {
-            let response = await fetch('/api/tasks', options);
+            let response = await fetch('/api/tasks/', options);
             let data = await response.json();
             return data;
         } catch (err) {
@@ -17,10 +17,13 @@ class TasksApi {
     async add(task) {
         let options = {
             method: 'POST',
-            body: JSON.stringify(task)
+            body: JSON.stringify(task),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         };
         try {
-            let response = await fetch('/api/tasks', options);
+            let response = await fetch('/api/tasks/', options);
             let data = await response.json();
             return data;
         } catch (err) {
