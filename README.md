@@ -8,7 +8,6 @@ Creazione di una nuova app
 - Creazione app: `python manage.py startapp todo`
 - Censire nuova app appena creata in settings.py
 - Creazione migration: `python manage.py makemigrations todo`
-- Creazione sql migration: `python manage.py makemigrations todo`
 - Applicazione migration: `python manage.py migrate`
 
 Rest Framework
