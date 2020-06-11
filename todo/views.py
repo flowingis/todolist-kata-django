@@ -19,10 +19,17 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def done(self, request, pk):
+        return self.__update_done_status(self, pk, 1)
+
+    @action(detail=True, methods=['post'])
+    def undone(self, request, pk):
+        return self.__update_done_status(self, pk, 0)
+
+    def __update_done_status(self, request, pk, done):
         try:
             task = Task.objects.get(id=pk)
         except Task.DoesNotExist:
             raise Http404
-        task.done = 1
+        task.done = done
         task.save()
         return HttpResponse(status=204)

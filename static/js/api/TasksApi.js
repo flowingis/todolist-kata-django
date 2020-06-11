@@ -86,6 +86,18 @@ class TasksApi {
         }
     }
 
+    async undone(taskId) {
+        let options = {
+            method: 'POST'
+        };
+        try {
+            await fetch(`/api/tasks/${taskId}/undone/`, options);
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+    }
+
 }
 
 export default TasksApi;

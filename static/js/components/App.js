@@ -87,9 +87,13 @@ export default {
             <ul>
                 <li v-for="task in tasks">
                     <div v-if="task.done == 1" class="mb-2">
-                        <div>
+                        <div class="float-left">
                             {{task.description}}
-                        </div>                        
+                        </div>
+                        <div class="float-right">
+                            <button class="bg-orange-500 hover:bg-orange-700 text-white py-1 w-16" @click="undone(task.id)">Undone</button>                            
+                        </div>
+                        <div class="clearfix"></div>                                          
                     </div>
                 </li>
             </ul>
@@ -138,6 +142,10 @@ export default {
         },
         async markAsDone(taskId) {
             await taskApi.markAsDone(taskId);
+            await this.getTasks();
+        },
+        async undone(taskId) {
+            await taskApi.undone(taskId);
             await this.getTasks();
         },
         clearInputFields() {
