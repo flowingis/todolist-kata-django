@@ -24,6 +24,11 @@ export default {
                                        id="username" 
                                        type="text"
                                        v-model="taskDescription">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Tags (Es. #tag1 tag2 tagN)</label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                       id="tags" 
+                                       type="text"
+                                       v-model="taskTags">
                             </div>
                         </div>
                     </div>
@@ -42,6 +47,11 @@ export default {
                                        id="username" 
                                        type="text"
                                        v-model="newTaskDescription">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Tags (Es. #tag1 tag2 tagN)</label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                       id="tags" 
+                                       type="text"
+                                       v-model="newTaskTags">                         
                             </div>
                         </div>
                     </div>
@@ -64,7 +74,10 @@ export default {
                 <li v-for="task in tasks">
                     <div v-if="task.done == 0" class="mb-2">
                         <div class="float-left">
-                            {{task.description}}
+                            <div>
+                                <span>{{task.description}}</span>
+                                <small class="ml-4 bg-yellow-500">{{task.tags.join(' ')}}</small>
+                            </div>
                         </div>
                         <div class="float-right">
                             <button class="bg-green-500 hover:bg-green-700 text-white py-1 w-16" @click="markAsDone(task.id)">Done</button>
@@ -88,7 +101,10 @@ export default {
                 <li v-for="task in tasks">
                     <div v-if="task.done == 1" class="mb-2">
                         <div class="float-left">
-                            {{task.description}}
+                            <div>
+                                <span>{{task.description}}</span>
+                                <small class="ml-4 bg-yellow-500">{{task.tags.join(' ')}}</small>
+                            </div>
                         </div>
                         <div class="float-right">
                             <button class="bg-orange-500 hover:bg-orange-700 text-white py-1 w-16" @click="undone(task.id)">Undone</button>                            
@@ -104,8 +120,10 @@ export default {
         return {
             tasks: [],
             taskDescription: '',
+            taskTags: '',
             newTaskDescription: '',
-            currentTaskId: null
+            newTaskTags: '',
+            currentTaskId: null,
         };
     },
     async mounted() {
@@ -117,7 +135,8 @@ export default {
         },
         async addTask() {
             let requestData = {
-                description: this.taskDescription
+                description: this.taskDescription,
+                tags: this.taskTags
             };
             let newTask = await taskApi.add(requestData);
             this.tasks.unshift(newTask);
@@ -127,10 +146,12 @@ export default {
             let task = await taskApi.get(taskId);
             this.currentTaskId = taskId;
             this.newTaskDescription = task.description;
+            this.newTaskTags = task.tags.join(' ')
         },
         async updateTask() {
             let requestData = {
-                description: this.newTaskDescription
+                description: this.newTaskDescription,
+                tags: this.newTaskTags
             };
             await taskApi.update(this.currentTaskId, requestData);
             await this.getTasks();
@@ -150,7 +171,9 @@ export default {
         },
         clearInputFields() {
             this.taskDescription = '';
+            this.taskTags = '';
             this.newTaskDescription = '';
+            this.newTaskTags = '';
             this.currentTaskId = null;
         }
     }

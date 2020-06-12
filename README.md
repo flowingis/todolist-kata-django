@@ -30,4 +30,3 @@ Riferimenti
 - https://www.django-rest-framework.org/tutorial/quickstart/
 - https://pypi.org/project/django-extensions/
 - https://docs.djangoproject.com/en/3.0/topics/testing/
-
