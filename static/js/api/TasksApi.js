@@ -98,6 +98,20 @@ class TasksApi {
         }
     }
 
+    async search(searchData) {
+        let options = {
+            method: 'GET'
+        };
+        try {
+            let response = await fetch(`/api/tasks/search?description=${encodeURIComponent(searchData.description)}&tags=${encodeURIComponent(searchData.tags)}`, options);
+            let data = await response.json();
+            return data;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
+    }
+
 }
 
 export default TasksApi;

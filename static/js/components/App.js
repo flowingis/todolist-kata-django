@@ -12,7 +12,7 @@ export default {
             
             <hr class="mb-4">
             
-            <div class="grid grid-cols-2">
+            <div class="grid grid-cols-3">
             
                 <div class="max-w-sm rounded overflow-hidden shadow-lg">              
                     <div class="px-6 py-4">
@@ -44,12 +44,12 @@ export default {
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Description</label>
                                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                                       id="username" 
+                                       id="current_username" 
                                        type="text"
                                        v-model="newTaskDescription">
                                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Tags (Es. #tag1 tag2 tagN)</label>
                                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                                       id="tags" 
+                                       id="current_tags" 
                                        type="text"
                                        v-model="newTaskTags">                         
                             </div>
@@ -57,6 +57,29 @@ export default {
                     </div>
                     <div class="px-6 py-4">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4" @click="updateTask()">Update</button>
+                    </div>
+                </div>
+                
+                <div class="max-w-sm rounded overflow-hidden shadow-lg">              
+                    <div class="px-6 py-4">
+                        <div class="font-bold text-xl mb-2">Search</div>
+                        <div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Description</label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                       id="search_username" 
+                                       type="text"
+                                       v-model="searchTaskDescription">
+                                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Tags (Es. #tag1 tag2 tagN)</label>
+                                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                       id="search_tags" 
+                                       type="text"
+                                       v-model="searchTaskTags">                                       
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4">
+                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4" @click="search()">Search</button>
                     </div>
                 </div>
             
@@ -124,6 +147,8 @@ export default {
             newTaskDescription: '',
             newTaskTags: '',
             currentTaskId: null,
+            searchTaskDescription: '',
+            searchTaskTags: ''
         };
     },
     async mounted() {
@@ -169,12 +194,24 @@ export default {
             await taskApi.undone(taskId);
             await this.getTasks();
         },
+        async search() {
+            let searchData = {
+                description: this.searchTaskDescription,
+                tags: this.searchTaskTags
+            }
+            this.tasks = await taskApi.search(searchData);
+            this.clearSearchFields();
+        },
         clearInputFields() {
             this.taskDescription = '';
             this.taskTags = '';
             this.newTaskDescription = '';
             this.newTaskTags = '';
             this.currentTaskId = null;
+        },
+        clearSearchFields() {
+            this.searchTaskDescription = '';
+            this.searchTaskTags = '';
         }
     }
 };
