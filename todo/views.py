@@ -1,6 +1,5 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.core import serializers
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -31,15 +30,13 @@ class TaskViewSet(viewsets.ModelViewSet):
     def search(self, request):
         query_data = {
             'description': request.query_params['description'],
-            'tags': request.query_params['tags']
+            'tags': request.query_params['tags'].split(' ') if len(request.query_params['tags']) > 0 else []
         }
         raw_data = Task.objects.raw(
             self.__get_sql_for_search(query_data),
             self.__get_sql_params_for_search(query_data)
         )
-        #TODO: EMPTY RAW DATA
-        data = serializers.serialize("json", raw_data)
-        return Response(data)
+        return Response(TaskSerializer(list(raw_data), many=True).data)
 
     def __update_done_status(self, request, pk, done):
         try:
@@ -54,21 +51,21 @@ class TaskViewSet(viewsets.ModelViewSet):
         sql_params = []
         if query_data['description']:
             sql_params.append('%' + query_data['description'] + '%')
-        if query_data['tags']:
-            sql_params.append(','.join(
-                list(
-                    map(lambda tag: "'" + tag + "'", query_data['tags'].split(' ')))
-                )
-            )
-
+        # N.B.: Non funziona con placeholder !!!
+        # if query_data['tags']:
+        #     sql_params.append(','.join(
+        #         list(
+        #             map(lambda tag: "'" + tag + "'", query_data['tags']))
+        #         )
+        #     )
         return sql_params
 
     def __get_sql_for_search(self, query_data: dict):
         sql: str = '''
             WITH RECURSIVE split(id, uuid, description, done, tags, tag_name, rest) AS (
-              SELECT id, uuid, description, done, tags, '', tags || ' ' FROM main.todo_task WHERE id
-               UNION ALL
-              SELECT id,
+              SELECT id, uuid, description, done, tags, '', tags || ' ' FROM todo_task WHERE id
+                UNION ALL
+                SELECT id,
                      uuid,
                      description,
                      done,
@@ -83,7 +80,13 @@ class TaskViewSet(viewsets.ModelViewSet):
         '''
         if query_data['description']:
             sql += ' AND description LIKE %s'
-        if query_data['tags']:
-            sql += ' AND tag_name IN (%s)'
+        if len(query_data['tags']) > 0:
+            # N.B.: Non funziona con placeholder !!!
+            # sql += ' AND tag_name IN (%s)'
+
+            # Workaround:
+            sql += 'AND tag_name IN ('
+            sql += ','.join(list(map(lambda tag: f"'{tag}'", query_data.get('tags'))))
+            sql += ')'
         sql += ' ORDER BY id desc'
         return sql
