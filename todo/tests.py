@@ -32,7 +32,7 @@ class TaskTestCase(TestCase):
         first_task = Task.objects.get(id=1)
         serializer = TaskSerializer(instance=first_task)
         data = serializer.data
-        self.assertEqual(set(data.keys()), set(['id', 'uuid', 'description', 'done']))
+        self.assertEqual(set(data.keys()), set(['id', 'uuid', 'description', 'done', 'tags']))
 
 
 class TaskAPITestCase(APITestCase):
@@ -65,13 +65,13 @@ class TaskAPITestCase(APITestCase):
         self.assertEqual('Primo Task', data['description'])
 
     def test_insert(self):
-        data = r'{"description": "New Task from API client"}'
+        data = r'{"description": "New Task from API client", "tags": ""}'
         response = self.client.post('/api/tasks/', data=data, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_update(self):
-        data = r'{"description": "New Task from API client ***MODIFICATO***"}'
+        data = r'{"description": "New Task from API client ***MODIFICATO***", "tags": ""}'
         response = self.client.put('/api/tasks/1/', data=data, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
